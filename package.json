@@ -6,7 +6,7 @@
 		"start": "yarn run svg && ng serve -o --host 0.0.0.0",
 		"svg": "node sprite.js && yarn run svgo",
 		"svgo": "svgo src/assets/sprite.svg --config svgo.config.cjs --pretty",
-		"build": "ng build",
+		"build": "ng build --base-href /dist/solvery-time/",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",
 		"prepare": "husky"
