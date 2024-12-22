@@ -13,7 +13,8 @@
 	},
 	"lint-staged": {
 		"*.{js,ts,json}": "npx prettier --write --use-tabs --single-quote",
-		"*.html": "eslint --fix"
+		"*.html": "eslint --fix",
+		"*.scss": "stylelint --fix --customSyntax postcss-scss"
 	},
 	"private": true,
 	"dependencies": {
