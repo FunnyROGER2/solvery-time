@@ -1,1 +1,1 @@
-export type CalendarMode = 'year' | 'month' | 'day' | 'hour';
+export type CalendarMode = 'year' | 'month' | 'week' | 'day' | 'hour';

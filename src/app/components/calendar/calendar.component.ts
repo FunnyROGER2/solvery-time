@@ -15,6 +15,7 @@ import {
 	addHours,
 	addMinutes,
 	addMonths,
+	addWeeks,
 	addYears,
 	format,
 	isAfter,
@@ -27,10 +28,12 @@ import {
 	startOfHour,
 	startOfMinute,
 	startOfMonth,
+	startOfWeek,
 	startOfYear,
 	subDays,
 	subHours,
 	subMonths,
+	subWeeks,
 	subYears,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -131,6 +134,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
 					locale: ru,
 				});
 				break;
+			case 'week':
+			case 'day':
+				result = format(this.visibleDate, "yyyy 'г.' / dd MMMM", {
+					locale: ru,
+				});
+				break;
 			case 'day':
 				result = format(this.visibleDate, "yyyy 'г.' / dd MMMM", {
 					locale: ru,
@@ -165,6 +174,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	getItemDate(date: Date) {
 		let result = '';
 		switch (this.activeMode) {
+			case 'week':
+				result = format(date, 'EEEEE', {
+					locale: ru,
+				});
+				break;
 			case 'day':
 				result = format(date, 'k');
 				break;
@@ -209,6 +223,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		switch (this.activeMode) {
 			case 'year':
 				startOfDate = startOfMonth(date);
+				break;
+			case 'week':
+				startOfDate = startOfDay(date);
 				break;
 			case 'day':
 				startOfDate = startOfHour(date);
@@ -278,6 +295,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
 				case 'year':
 					cols = 12;
 					break;
+				case 'week':
+					rows = 1;
+					cols = 7;
+					break;
 				case 'day':
 					rows = 2;
 					cols = 12;
@@ -305,6 +326,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
 					switch (this.activeMode) {
 						case 'year':
 							thisDate = startOfYear(this.visibleDate);
+							break;
+						case 'week':
+							thisDate = startOfWeek(this.visibleDate, {
+								weekStartsOn: 1,
+							});
 							break;
 						case 'day':
 							thisDate = startOfDay(this.visibleDate);
@@ -338,6 +364,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
 						case 'year':
 							thisDate = addMonths(previousDate, 1);
 							break;
+						case 'week':
+							thisDate = addDays(previousDate, 1);
+							break;
 						case 'day':
 							thisDate = addHours(previousDate, 1);
 							break;
@@ -354,6 +383,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 							+thisDate === +this.lastDateOfCurrentMonth) ||
 						((this.rowsNumber ||
 							mode === 'year' ||
+							mode === 'week' ||
 							mode === 'day' ||
 							mode === 'hour') &&
 							rowNumber === rows - 1)
@@ -380,6 +410,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 			if (
 				mode === 'year' ||
+				mode === 'week' ||
 				mode === 'day' ||
 				mode === 'hour' ||
 				this.rowsNumber
@@ -396,6 +427,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		switch (this.activeMode) {
 			case 'year':
 				return +date === +startOfMonth(this[`${matchMode}Date`]);
+			case 'week':
+				return +date === +startOfDay(this[`${matchMode}Date`]);
 			case 'day':
 				return +date === +startOfHour(this[`${matchMode}Date`]);
 			case 'hour':
@@ -444,6 +477,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			month: {
 				forward: addMonths(this.visibleDate, 1),
 				backward: subMonths(this.visibleDate, 1),
+			},
+			week: {
+				forward: addWeeks(this.visibleDate, 1),
+				backward: subWeeks(this.visibleDate, 1),
 			},
 			day: {
 				forward: addDays(this.visibleDate, 1),
