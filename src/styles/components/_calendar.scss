@@ -68,7 +68,8 @@
 			}
 		}
 
-		&--month {
+		&--month,
+		&--week {
 			@include media-breakpoint-down(md) {
 				--calendar-button-p: 16px 4px;
 				--calendar-min-w: 0;
