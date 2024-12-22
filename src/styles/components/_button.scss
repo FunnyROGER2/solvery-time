@@ -1,0 +1,121 @@
+.button {
+	--button-bg-cl: rgba(var(--c-bg-primary), .6);
+	--button-border-cl: transparent;
+	--button-cl: rgb(var(--c-text-button));
+	--button-gap: 4px;
+	--button-fz: 16px;
+	--button-brs: 4px;
+
+	display: flex;
+	gap: var(--button-gap);
+	align-items: center;
+	justify-content: center;
+	width: fit-content;
+	padding: 6px;
+	border: 1px solid var(--button-border-cl);
+	border-radius: var(--button-brs);
+	background-color: var(--button-bg-cl);
+	color: var(--button-cl);
+	text-decoration: none;
+	cursor: pointer;
+
+	&__text {
+		font-size: var(--button-fz);
+		line-height: normal;
+		white-space: nowrap;
+
+		&:empty {
+			display: none;
+		}
+	}
+
+	&__icon {
+		--icon-stroke-w: 2px;
+		--loader-icon-w: var(--icon-w);
+
+		align-self: normal;
+		filter: contrast(1);
+	}
+
+	&:disabled,
+	&--disabled {
+		filter: grayscale(1);
+		pointer-events: none;
+
+		.button__icon {
+			opacity: .3;
+		}
+	}
+
+	&--negative {
+		--button-cl: rgba(var(--c-text-negative), 1);
+		--button-bg-cl: transparent;
+	}
+
+	&--positive {
+		--button-bg-cl: transparent;
+		--button-cl: rgba(var(--c-text-positive), 1);
+	}
+
+	&--ghost {
+		--button-bg-cl: transparent;
+		--button-cl: rgba(var(--c-text-button-inverse), .4);
+		--button-border-cl: rgba(var(--c-border-primary), .2);
+	}
+
+	&--ghost-positive {
+		--button-bg-cl: transparent;
+		--button-cl: rgba(var(--c-text-positive), 1);
+		--button-border-cl: rgba(var(--c-border-positive), 1);
+	}
+
+	&--secondary {
+		--button-bg-cl: transparent;
+		--button-cl: rgba(var(--c-text-button-inverse), .6);
+		--button-border-cl: transparent;
+	}
+
+	&--emoji {
+		--button-cl: currentColor;
+	}
+
+	&--sm {
+		--button-gap: 2px;
+		--button-fz: 14px;
+
+		.button__icon {
+			--icon-stroke-w: 1.5px;
+			--icon-w: 16px;
+		}
+	}
+
+	&--md {
+		--button-gap: 2px;
+		--button-fz: 14px;
+
+		.button__icon {
+			--icon-stroke-w: 1.5px;
+			--icon-w: 24px;
+		}
+	}
+
+	&--lg {
+		--button-gap: 8px;
+		--button-fz: 20px;
+		--button-brs: 8px;
+
+		.button__icon {
+			@include media-breakpoint-down(sm) {
+				--icon-w: 28px;
+				--icon-stroke-w: 1.5px;
+			}
+
+			@include media-breakpoint-down(xs) {
+				--icon-w: 20px;
+			}
+
+			--icon-stroke-w: 1px;
+			--icon-w: 40px;
+		}
+	}
+}

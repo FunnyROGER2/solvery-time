@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+@import './styles/reboot';
+@import './styles/variables';
+@import './styles/mixins';
+@import './styles/functions';
+@import './styles/components';
+
+:root {
+	@include get-colors;
+
+	--ff-slab: 'Roboto Slab', sans-serif;
+}
+
+.subtitle {
+	margin: 10px 0 20px;
+}
+
+.description {
+	margin: 12px 0;
+}
+
+.empty {
+	font-family: var(--ff-slab);
+}
+
+.ov-hidden {
+	overflow: hidden;
+}

@@ -1,0 +1,10 @@
+.loader {
+	--loader-icon-w: 40px;
+
+	display: flex;
+
+	&__icon {
+		width: var(--loader-icon-w);
+		margin: auto;
+	}
+}

@@ -1,0 +1,105 @@
+<div class="calendar__header">
+	<div class="calendar__nav">
+		<div class="calendar__nav-set">
+			<button
+				app-button
+				icon="chevron-left"
+				title="Пролистать календарь влево"
+				mode="ghost"
+				(click)="switchCalendarPeriod(false)"
+			></button>
+			<button
+				app-button
+				icon="chevron-right"
+				title="Пролистать календарь вправо"
+				mode="ghost"
+				(click)="switchCalendarPeriod(true)"
+			></button>
+		</div>
+
+		<div class="calendar__nav-set">
+			<button
+				app-button
+				icon="home-2"
+				mode="ghost"
+				title="Перейти к нынешнему моменту"
+				(click)="switchCalendarToNow()"
+			></button>
+			<button
+				app-button
+				icon="clock"
+				mode="ghost"
+				title="Перейти к выбранному моменту"
+				(click)="switchCalendarToSelected()"
+			></button>
+		</div>
+		<span
+			class="calendar__status"
+			*ngIf="!hideCurrentPeriod"
+		>{{ visiblePeriod }}</span>
+	</div>
+
+	<app-switcher
+		*ngIf="!hideModeSwitch"
+		class="calendar__switcher"
+		[items]="calendarModes"
+		[value]="activeMode"
+		(valueSwitched)="switchCalendarMode($event)"
+	></app-switcher>
+</div>
+
+<div class="calendar__table-wrapper">
+	<table
+		class="calendar__table"
+		[ngClass]="['calendar__table--' + activeMode]"
+	>
+		<thead *ngIf="activeMode === 'month'">
+			<tr class="calendar__row">
+				<th
+					class="calendar__head"
+					[ngClass]="{
+						'calendar__head--weekend': weekendDays.includes(i)
+					}"
+					*ngFor="let day of weekDaysArray; index as i"
+				>{{ day }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr
+				*ngFor="let period of calendarArray"
+				class="calendar__row"
+			>
+				<td
+					class="calendar__cell"
+					*ngFor="let item of period"
+				>
+					<button
+						class="calendar__button"
+						type="button"
+						[ngClass]="{
+							'calendar__button--selected': item.selectedDate,
+							'calendar__button--now': item.nowDate,
+							'calendar__button--weekend': item.weekendDate,
+							'calendar__button--other': item.otherMonthDate,
+							'calendar__button--readonly': urlMode
+						}"
+						[disabled]="item.disabledDate"
+						(click)="dateClicked({
+							date: item.date,
+							activeMode,
+						})"
+					>
+						{{ getItemDate(item.date) }}
+					</button>
+					<div class="calendar__date-nav">
+						<ng-container
+							*ngIf="navTemplate"
+							[ngTemplateOutlet]="navTemplate"
+							[ngTemplateOutletContext]="{ date: item, mode: this.activeMode }"
+						></ng-container>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

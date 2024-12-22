@@ -1,0 +1,103 @@
+.form {
+	--form-col-brs: 15px;
+
+	@media (max-width: 1024px) {
+		width: 100%;
+	}
+
+	&__nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: 10px;
+	}
+
+	&__row {
+		@include media-breakpoint-down(sm) {
+			flex-wrap: wrap;
+		}
+
+		display: flex;
+		gap: 10px;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+
+		&--top {
+			align-items: flex-start;
+		}
+	}
+
+	&__col {
+		margin-right: auto;
+
+		&--right {
+			margin-right: 0;
+			margin-left: auto;
+		}
+	}
+
+	&__control {
+		width: 100%;
+	}
+
+	&__checks {
+		display: flex;
+		gap: 6px;
+	}
+
+	&__color {
+		margin-right: auto;
+		margin-bottom: auto;
+	}
+
+	&__section {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		justify-content: space-between;
+		width: 100%;
+		margin-top: 10px;
+		padding: 15px;
+		border: 1px solid rgba(var(--point-color), .2);
+		border-radius: var(--form-col-brs);
+		background-color: rgba(var(--c-bg-primary), .02);
+
+		&--auth {
+			width: clamp(50%, 400px, 100%);
+			margin: 20px auto;
+		}
+	}
+
+	&__section-title {
+		display: flex;
+		gap: 8px;
+		margin-top: 20px;
+	}
+
+	&__btn {
+		white-space: nowrap;
+	}
+
+	&__submit {
+		margin-left: auto;
+	}
+
+	&--single {
+		.form {
+			&__section {
+				&:first-child {
+					border-bottom-right-radius: 0;
+					border-bottom-left-radius: 0;
+				}
+
+				+ .form__section {
+					margin-top: 0;
+					padding-top: 0;
+					border-top-left-radius: 0;
+					border-top-right-radius: 0;
+				}
+			}
+		}
+	}
+}
