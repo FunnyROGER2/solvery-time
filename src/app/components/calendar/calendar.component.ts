@@ -56,8 +56,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	private subscriptions = new Subscription();
 
-	@Input() activeMode: CalendarMode =
-		(localStorage.getItem('calendarMode') as CalendarMode) || 'week';
+	@Input() activeMode: CalendarMode = 'week';
 	@Input() selectedDate = this.nowDate;
 	@Input() hideCurrentPeriod = false;
 	@Input() hideModeSwitch = false;
@@ -452,7 +451,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			date: this.selectedDate,
 			mode: mode as CalendarMode,
 		});
-		localStorage.setItem('calendarMode', mode);
 		this.modeSelected.emit(this.activeMode);
 	}
 
