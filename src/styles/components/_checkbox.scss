@@ -86,4 +86,14 @@
 			--checkbox-border-cl: rgba(var(--c-border-primary), .4);
 		}
 	}
+
+	&--calendar {
+		&:has(:checked) {
+			--calendar-button-bg-cl: rgba(var(--c-bg-primary), .2);
+		}
+
+		.checkbox__label {
+			margin: auto;
+		}
+	}
 }

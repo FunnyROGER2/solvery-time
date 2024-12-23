@@ -8,6 +8,7 @@ import { SwitcherComponent } from './components/switcher/switcher.component';
 import { SvgComponent } from './components/svg/svg.component';
 import { ButtonComponent } from './components/button/button.component';
 import { LoaderComponent } from './components/loader/loader.component';
+import { CheckboxComponent } from './components/checkbox/checkbox.component';
 
 @NgModule({
 	declarations: [
@@ -17,6 +18,7 @@ import { LoaderComponent } from './components/loader/loader.component';
 		SvgComponent,
 		ButtonComponent,
 		LoaderComponent,
+		CheckboxComponent,
 	],
 	imports: [BrowserModule, AppRoutingModule],
 	providers: [],

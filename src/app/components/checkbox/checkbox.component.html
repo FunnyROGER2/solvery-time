@@ -1,0 +1,40 @@
+<ng-container *ngIf="mode !== 'calendar'">
+	<span
+		*ngIf="!icon else iconTemplate;"
+		class="checkbox__box"
+		[ngClass]="{
+			'checkbox__box--sm': iconSize === 'sm'
+		}"
+	>
+		<svg
+			app-svg
+			name="check"
+			class="checkbox__icon"
+		></svg>
+	</span>
+</ng-container>
+<span class="checkbox__label"><ng-content></ng-content></span>
+<input
+	type="checkbox"
+	class="checkbox__input"
+	[checked]="isChecked"
+	[disabled]="isDisabled"
+	(change)="onCheckboxChange($event)"
+	[attr.name]="name"
+	[attr.id]="name"
+>
+
+<ng-template #iconTemplate>
+	<span
+		class="checkbox__box"
+		[ngClass]="{
+			'checkbox__box--sm': iconSize === 'sm'
+		}"
+	>
+		<svg
+			app-svg
+			[name]="icon"
+			class="checkbox__icon"
+		></svg>
+	</span>
+</ng-template>

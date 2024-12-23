@@ -25,13 +25,13 @@
 				title="Перейти к нынешнему моменту"
 				(click)="switchCalendarToNow()"
 			></button>
-			<button
+			<!-- <button
 				app-button
 				icon="clock"
 				mode="ghost"
 				title="Перейти к выбранному моменту"
 				(click)="switchCalendarToSelected()"
-			></button>
+				></button> -->
 		</div>
 		<span
 			class="calendar__status"
@@ -53,7 +53,10 @@
 		class="calendar__table"
 		[ngClass]="['calendar__table--' + activeMode]"
 	>
-		<thead *ngIf="activeMode === 'month'">
+		<thead
+			*ngIf="activeMode === 'month' || activeMode === 'week'"
+			class="calendar__thead"
+		>
 			<tr class="calendar__row">
 				<th
 					class="calendar__head"
@@ -64,7 +67,7 @@
 				>{{ day }}</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody class="calendar__tbody">
 			<tr
 				*ngFor="let period of calendarArray"
 				class="calendar__row"
@@ -73,24 +76,38 @@
 					class="calendar__cell"
 					*ngFor="let item of period"
 				>
-					<button
+					<!-- <button
 						class="calendar__button"
 						type="button"
 						[ngClass]="{
-							'calendar__button--selected': item.selectedDate,
-							'calendar__button--now': item.nowDate,
+						'calendar__button--selected': item.selectedDate,
+						'calendar__button--now': item.nowDate,
+						'calendar__button--weekend': item.weekendDate,
+						'calendar__button--other': item.otherMonthDate,
+						'calendar__button--readonly': urlMode
+						}"
+						[disabled]="item.disabledDate"
+						(click)="dateClicked({
+						date: item.date,
+						activeMode,
+						})"
+						>
+						{{ getItemDate(item.date) }}
+						</button> -->
+					<label
+						class="calendar__button"
+						app-checkbox
+						mode="calendar"
+						[ngClass]="{
 							'calendar__button--weekend': item.weekendDate,
 							'calendar__button--other': item.otherMonthDate,
 							'calendar__button--readonly': urlMode
 						}"
-						[disabled]="item.disabledDate"
-						(click)="dateClicked({
-							date: item.date,
-							activeMode,
-						})"
+						[attr.disabled]="item.disabledDate"
+						(change)="dateChecked()"
 					>
 						{{ getItemDate(item.date) }}
-					</button>
+					</label>
 					<div class="calendar__date-nav">
 						<ng-container
 							*ngIf="navTemplate"
@@ -102,4 +119,11 @@
 			</tr>
 		</tbody>
 	</table>
+</div>
+
+<div class="calendar__footer">
+	<button
+		app-button
+		mode="ghost-positive"
+	>Копировать</button>
 </div>

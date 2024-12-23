@@ -18,6 +18,8 @@ import {
 	addWeeks,
 	addYears,
 	format,
+	getHours,
+	getMinutes,
 	isAfter,
 	isBefore,
 	isMonday,
@@ -53,6 +55,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	private firstMonday!: Date;
 	private isCalendarInited = false;
 	private _visibleDate = this.nowDate;
+	private _slotInterval = 30;
+	private _slotHourStart = 9;
+	private _slotHourEnd = 20;
 
 	private subscriptions = new Subscription();
 
@@ -134,6 +139,24 @@ export class CalendarComponent implements OnInit, OnDestroy {
 				});
 				break;
 			case 'week':
+				result =
+					format(this.visibleDate, 'yyyy', {
+						locale: ru,
+					}) +
+					' / ' +
+					format(
+						startOfWeek(this.visibleDate, { weekStartsOn: 1 }),
+						'dd.MM'
+					) +
+					'—' +
+					format(
+						addDays(
+							startOfWeek(this.visibleDate, { weekStartsOn: 1 }),
+							6
+						),
+						'dd.MM'
+					);
+				break;
 			case 'day':
 				result = format(this.visibleDate, "yyyy 'г.' / dd MMMM", {
 					locale: ru,
@@ -174,12 +197,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		let result = '';
 		switch (this.activeMode) {
 			case 'week':
-				result = format(date, 'EEEEE', {
+				result = format(date, 'HH:mm', {
 					locale: ru,
 				});
 				break;
 			case 'day':
-				result = format(date, 'k');
+				result = format(date, 'H');
 				break;
 			case 'hour':
 				result = format(date, 'm');
@@ -194,6 +217,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
 				break;
 		}
 		return result;
+	}
+
+	dateChecked() {
+		// TODO: сохранять, добавить попап с результатом
 	}
 
 	dateClicked({
@@ -295,7 +322,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
 					cols = 12;
 					break;
 				case 'week':
-					rows = 1;
 					cols = 7;
 					break;
 				case 'day':
@@ -327,9 +353,15 @@ export class CalendarComponent implements OnInit, OnDestroy {
 							thisDate = startOfYear(this.visibleDate);
 							break;
 						case 'week':
-							thisDate = startOfWeek(this.visibleDate, {
-								weekStartsOn: 1,
-							});
+							thisDate = addDays(
+								addHours(
+									startOfWeek(this.visibleDate, {
+										weekStartsOn: 1,
+									}),
+									this._slotHourStart
+								),
+								i
+							);
 							break;
 						case 'day':
 							thisDate = startOfDay(this.visibleDate);
@@ -351,7 +383,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 						disabledDate: this.isDateDisabled(thisDate),
 						weekendDate:
 							this.weekendDays.includes(i) &&
-							this.activeMode === 'month',
+							(this.activeMode === 'month' ||
+								this.activeMode === 'week'),
 						otherMonthDate:
 							!isSameMonth(thisDate, this.visibleDate) &&
 							this.activeMode === 'month',
@@ -364,7 +397,18 @@ export class CalendarComponent implements OnInit, OnDestroy {
 							thisDate = addMonths(previousDate, 1);
 							break;
 						case 'week':
-							thisDate = addDays(previousDate, 1);
+							thisDate = addMinutes(
+								addDays(
+									addHours(
+										startOfWeek(this.visibleDate, {
+											weekStartsOn: 1,
+										}),
+										this._slotHourStart
+									),
+									i
+								),
+								this._slotInterval * fullArray.length
+							);
 							break;
 						case 'day':
 							thisDate = addHours(previousDate, 1);
@@ -380,9 +424,16 @@ export class CalendarComponent implements OnInit, OnDestroy {
 						(mode === 'month' &&
 							!this.rowsNumber &&
 							+thisDate === +this.lastDateOfCurrentMonth) ||
+						(mode === 'week' &&
+							!this.rowsNumber &&
+							i === 6 &&
+							getHours(thisDate) * 60 +
+								getMinutes(
+									addMinutes(thisDate, this._slotInterval)
+								) >
+								this._slotHourEnd * 60 - this._slotInterval) ||
 						((this.rowsNumber ||
 							mode === 'year' ||
-							mode === 'week' ||
 							mode === 'day' ||
 							mode === 'hour') &&
 							rowNumber === rows - 1)
@@ -427,7 +478,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			case 'year':
 				return +date === +startOfMonth(this[`${matchMode}Date`]);
 			case 'week':
-				return +date === +startOfDay(this[`${matchMode}Date`]);
+				return +date === +startOfHour(this[`${matchMode}Date`]);
 			case 'day':
 				return +date === +startOfHour(this[`${matchMode}Date`]);
 			case 'hour':
