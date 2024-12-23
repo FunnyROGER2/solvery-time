@@ -6178,10 +6178,10 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-ngx-device-detector@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/ngx-device-detector/-/ngx-device-detector-9.0.0.tgz#ac0b14d02a03492689c3825b0ddad9c726d6fac4"
-  integrity sha512-zpio/wqH1GnxIpWCdA7cp5fmWf7YLycgzfXzQHmB9vaS7eAcqpBF5mxDS65IhE7TzNTJziDrYJCT+9tVqBcsDg==
+ngx-device-detector@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-device-detector/-/ngx-device-detector-6.0.0.tgz#e474e631c026d297621fcac1e1e33d6698b13101"
+  integrity sha512-i/fxtXRygvEuefyd+i9OPmM2cKSF5ZanFmZH0B25ZWYyQ9L4T/7EEN9FXoQOM6IArVcJ+SL/CICLr5R3tDpruQ==
   dependencies:
     tslib "^2.0.0"
 
