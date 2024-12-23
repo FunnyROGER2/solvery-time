@@ -103,8 +103,9 @@
 							'calendar__button--other': item.otherMonthDate,
 							'calendar__button--readonly': urlMode
 						}"
+						[isChecked]="item.selectedDate"
 						[attr.disabled]="item.disabledDate"
-						(change)="dateChecked()"
+						(change)="dateChecked($event, item.date)"
 					>
 						{{ getItemDate(item.date) }}
 					</label>
@@ -124,6 +125,21 @@
 <div class="calendar__footer">
 	<button
 		app-button
+		[attr.disabled]="!this.slotsSelected.length || null"
+		mode="negative"
+		icon="cross"
+		(click)="clearSlots()"
+	></button>
+	<!-- <button
+		app-button
+		[attr.disabled]="!this.slotsSelected.length || null"
+		mode="ghost"
+		(click)="showSlots()"
+		>Cлоты</button> -->
+	<button
+		app-button
+		[attr.disabled]="!this.slotsSelected.length || null"
 		mode="ghost-positive"
+		(click)="copySlots()"
 	>Копировать</button>
 </div>

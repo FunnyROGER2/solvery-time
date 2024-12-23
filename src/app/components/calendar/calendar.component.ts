@@ -43,6 +43,9 @@ import { Subscription } from 'rxjs';
 import { calendarModeNames } from 'src/app/enums';
 import { CalendarDate, SwitcherItem } from 'src/app/interfaces';
 import { CalendarMode } from 'src/app/types';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { NotifyService, PopupService } from 'src/app/services';
+import { SlotsListComponent } from '../slots-list/slots-list.component';
 
 @Component({
 	selector: 'app-calendar',
@@ -89,6 +92,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	calendarArray: CalendarDate[][] = [];
 	daysOfWeek: string[] = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+	slotsSelected: Date[] = [];
 
 	@Output() dateSelected = new EventEmitter<{
 		date: Date;
@@ -100,7 +104,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	@ContentChild('navTemplate') navTemplate: TemplateRef<unknown> | undefined;
 
-	constructor(private cdr: ChangeDetectorRef) {}
+	constructor(
+		private cdr: ChangeDetectorRef,
+		private deviceService: DeviceDetectorService,
+		private notify: NotifyService,
+		private popupService: PopupService
+	) {}
 
 	ngOnInit() {
 		/**
@@ -219,8 +228,15 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		return result;
 	}
 
-	dateChecked() {
-		// TODO: сохранять, добавить попап с результатом
+	dateChecked(event: Event, date: Date) {
+		if ((event.target as HTMLInputElement).checked) {
+			this.slotsSelected.push(date);
+			this.slotsSelected.sort((a, b) => +a - +b);
+		} else {
+			this.slotsSelected = this.slotsSelected.filter(
+				(item) => +item !== +date
+			);
+		}
 	}
 
 	dateClicked({
@@ -378,7 +394,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
 					rowArray.push({
 						date: thisDate,
 						visibleDate: this.isDateMatch(thisDate, 'visible'),
-						selectedDate: this.isDateMatch(thisDate, 'selected'),
+						selectedDate: this.slotsSelected.some(
+							(item) => +item === +thisDate
+						),
 						nowDate: this.isDateMatch(thisDate, 'now'),
 						disabledDate: this.isDateDisabled(thisDate),
 						weekendDate:
@@ -445,7 +463,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
 					rowArray.push({
 						date: thisDate,
 						visibleDate: this.isDateMatch(thisDate, 'visible'),
-						selectedDate: this.isDateMatch(thisDate, 'selected'),
+						selectedDate: this.slotsSelected.some(
+							(item) => +item === +thisDate
+						),
 						nowDate: this.isDateMatch(thisDate, 'now'),
 						disabledDate: this.isDateDisabled(thisDate),
 						weekendDate:
@@ -545,5 +565,47 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			date: result[this.activeMode][forward ? 'forward' : 'backward'],
 		});
 		this.cdr.detectChanges();
+	}
+
+	copySlots() {
+		const copyText = this.slotsSelected
+			.map((item) => format(item, 'yyyy/MM/dd HH:mm'))
+			.join(', ');
+
+		if (this.deviceService.isDesktop()) {
+			navigator.clipboard
+				.writeText(copyText)
+				.then(() => {
+					this.notify.add({
+						title: 'Скопировано',
+						short: true,
+						view: 'positive',
+					});
+				})
+				.catch(() => {
+					console.error(
+						'Надо вернуть фокус в браузер для копирования ссылки'
+					);
+				});
+		} else {
+			const shareData: ShareData = {
+				text: copyText,
+			};
+			navigator.canShare(shareData) && navigator.share(shareData);
+		}
+	}
+
+	showSlots() {
+		// TODO: Реализовать передачу инпутов в компонент
+		this.popupService.show('Выбранные слоты', SlotsListComponent, {
+			slots: this.slotsSelected,
+		});
+	}
+
+	clearSlots() {
+		this.slotsSelected = [];
+		this.generateCalendar({
+			force: true,
+		});
 	}
 }
