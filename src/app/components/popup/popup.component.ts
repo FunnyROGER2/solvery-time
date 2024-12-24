@@ -2,7 +2,6 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
-	ComponentRef,
 	HostListener,
 	OnDestroy,
 	OnInit,
@@ -25,7 +24,6 @@ export class PopupComponent implements OnInit, OnDestroy {
 
 	title = '';
 	isVisible = false;
-	componentRef!: ComponentRef<any>;
 	private subscriptions = new Subscription();
 
 	constructor(
@@ -60,11 +58,11 @@ export class PopupComponent implements OnInit, OnDestroy {
 		this.title = title;
 		this.cdr.detectChanges();
 
-		this.componentRef = this.popupContent.createComponent(component);
+		const componentRef = this.popupContent.createComponent(component);
 
 		if (inputs) {
 			for (const [key, value] of Object.entries(inputs)) {
-				(this.componentRef.instance as any)[key] = value;
+				(componentRef.instance as any)[key] = value;
 			}
 		}
 
