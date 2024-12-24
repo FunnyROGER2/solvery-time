@@ -149,13 +149,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
 				break;
 			case 'week':
 				result =
-					format(this.visibleDate, 'yyyy', {
-						locale: ru,
-					}) +
-					' / ' +
 					format(
 						startOfWeek(this.visibleDate, { weekStartsOn: 1 }),
-						'dd.MM'
+						'yyyy.MM.dd'
 					) +
 					'—' +
 					format(
@@ -163,7 +159,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 							startOfWeek(this.visibleDate, { weekStartsOn: 1 }),
 							6
 						),
-						'dd.MM'
+						'yyyy.MM.dd'
 					);
 				break;
 			case 'day':
@@ -195,6 +191,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	}
 
 	get weekDaysArray() {
+		// TODO: добавить отображение даты
+		// TODO: выделять колонку или день "Сегодня"
 		let result: string[] = [];
 		for (let i = 0; i < +this.daysPerWeek; i++) {
 			result.push(this.daysOfWeek[i % 7]);
@@ -568,8 +566,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	}
 
 	copySlots() {
+		// TODO: корректировать часовой пояс
 		const copyText = this.slotsSelected
-			.map((item) => format(item, 'yyyy/MM/dd HH:mm'))
+			.map((item) => format(item, 'dd/MM/yyyy HH:mm'))
 			.join(', ');
 
 		if (this.deviceService.isDesktop()) {
