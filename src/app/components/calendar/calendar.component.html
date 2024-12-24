@@ -1,43 +1,8 @@
 <div class="calendar__header">
-	<div class="calendar__nav">
-		<div class="calendar__nav-set">
-			<button
-				app-button
-				icon="chevron-left"
-				title="Пролистать календарь влево"
-				mode="ghost"
-				(click)="switchCalendarPeriod(false)"
-			></button>
-			<button
-				app-button
-				icon="chevron-right"
-				title="Пролистать календарь вправо"
-				mode="ghost"
-				(click)="switchCalendarPeriod(true)"
-			></button>
-		</div>
-
-		<div class="calendar__nav-set">
-			<button
-				app-button
-				icon="home-2"
-				mode="ghost"
-				title="Перейти к нынешнему моменту"
-				(click)="switchCalendarToNow()"
-			></button>
-			<!-- <button
-				app-button
-				icon="clock"
-				mode="ghost"
-				title="Перейти к выбранному моменту"
-				(click)="switchCalendarToSelected()"
-				></button> -->
-		</div>
-		<span
-			class="calendar__status"
-			*ngIf="!hideCurrentPeriod"
-		>{{ visiblePeriod }}</span>
-	</div>
+	<span
+		class="calendar__status"
+		*ngIf="!hideCurrentPeriod"
+	>{{ visiblePeriod }}</span>
 
 	<!-- <app-switcher
 		*ngIf="!hideModeSwitch"
@@ -128,23 +93,70 @@
 </div>
 
 <div class="calendar__footer">
+	<div class="calendar__nav">
+		<div class="calendar__nav-set">
+			<button
+				app-button
+				icon="chevron-left"
+				size="lg"
+				title="Пролистать календарь влево"
+				mode="ghost"
+				(click)="switchCalendarPeriod(false)"
+			></button>
+			<button
+				app-button
+				icon="chevron-right"
+				size="lg"
+				title="Пролистать календарь вправо"
+				mode="ghost"
+				(click)="switchCalendarPeriod(true)"
+			></button>
+		</div>
+
+		<div class="calendar__nav-set">
+			<button
+				app-button
+				icon="home-2"
+				size="lg"
+				mode="ghost"
+				title="Перейти к нынешнему моменту"
+				(click)="switchCalendarToNow()"
+			></button>
+			<!-- <button
+				app-button
+				icon="clock"
+				mode="ghost"
+				title="Перейти к выбранному моменту"
+				(click)="switchCalendarToSelected()"
+				></button> -->
+		</div>
+	</div>
+
 	<button
 		app-button
 		[attr.disabled]="!this.slotsSelected.length || null"
 		mode="negative"
+		size="lg"
 		icon="cross"
+		title="Очистить выбранные слоты"
 		(click)="clearSlots()"
 	></button>
 	<button
 		app-button
 		[attr.disabled]="!this.slotsSelected.length || null"
 		mode="ghost"
+		icon="hamburger"
+		size="lg"
+		title="Показать выбранные слоты"
 		(click)="showSlots()"
-	>Cлоты</button>
+	></button>
 	<button
 		app-button
 		[attr.disabled]="!this.slotsSelected.length || null"
 		mode="ghost-positive"
+		size="lg"
+		icon="share"
+		title="Скопировать выбранные слоты"
 		(click)="copySlots()"
-	>Копировать</button>
+	></button>
 </div>

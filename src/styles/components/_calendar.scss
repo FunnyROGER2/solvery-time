@@ -15,7 +15,7 @@
 	min-height: 0;
 
 	&__header {
-		margin-bottom: 12px;
+		display: flex;
 	}
 
 	&__nav {
@@ -26,6 +26,7 @@
 		display: flex;
 		gap: 20px;
 		align-items: center;
+		margin-right: auto;
 
 		&--drop {
 			@include media-breakpoint-down(md) {
@@ -44,7 +45,7 @@
 	}
 
 	&__status {
-		margin-left: 12px;
+		margin: auto;
 		font-weight: 300;
 	}
 
