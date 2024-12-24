@@ -46,7 +46,7 @@ import { calendarModeNames } from 'src/app/enums';
 import { CalendarDate, SwitcherItem } from 'src/app/interfaces';
 import { CalendarMode } from 'src/app/types';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { NotifyService, PopupService } from 'src/app/services';
+import { ActionService, NotifyService, PopupService } from 'src/app/services';
 import { SlotsListComponent } from '../slots-list/slots-list.component';
 
 @Component({
@@ -111,7 +111,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		private cdr: ChangeDetectorRef,
 		private deviceService: DeviceDetectorService,
 		private notify: NotifyService,
-		private popupService: PopupService
+		private popupService: PopupService,
+		private actionService: ActionService
 	) {}
 
 	ngOnInit() {
@@ -127,6 +128,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		});
 		this.created.emit();
 		this.isCalendarInited = true;
+
+		this.subscriptions.add(
+			this.actionService.eventSlotRemoved$.subscribe({
+				next: (slot) => {
+					this.removeSlot(slot);
+				},
+			})
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -411,7 +420,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
 						selectedDate: this.slotsSelected.some(
 							(item) => +item === +thisDate
 						),
-						nowDate: this.isDateMatch(thisDate, 'now'),
+						nowDate:
+							this.activeMode === 'week'
+								? isSameDay(thisDate, this.nowDate)
+								: this.isDateMatch(thisDate, 'now'),
 						disabledDate: this.isDateDisabled(thisDate),
 						weekendDate:
 							this.weekendDays.includes(i) &&
@@ -480,7 +492,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
 						selectedDate: this.slotsSelected.some(
 							(item) => +item === +thisDate
 						),
-						nowDate: this.isDateMatch(thisDate, 'now'),
+						nowDate:
+							this.activeMode === 'week'
+								? isSameDay(thisDate, this.nowDate)
+								: this.isDateMatch(thisDate, 'now'),
 						disabledDate: this.isDateDisabled(thisDate),
 						weekendDate:
 							this.weekendDays.includes(i) &&
@@ -615,10 +630,19 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	}
 
 	showSlots() {
-		// TODO: Реализовать передачу инпутов в компонент
 		this.popupService.show('Выбранные слоты', SlotsListComponent, {
 			slots: this.slotsSelected,
 		});
+	}
+
+	removeSlot(slot: Date) {
+		this.slotsSelected = this.slotsSelected.filter(
+			(item) => +item !== +slot
+		);
+		this.generateCalendar({
+			force: true,
+		});
+		this.cdr.detectChanges();
 	}
 
 	clearSlots() {

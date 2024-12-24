@@ -1,0 +1,14 @@
+.slots-list {
+	column-width: 200px;
+	column-gap: 10px;
+	margin: 0;
+	padding: 0;
+
+	&__item {
+		display: flex;
+		align-items: center;
+		padding: 8px 12px;
+		color: rgb(var(--c-text-primary));
+		line-height: 30px;
+	}
+}

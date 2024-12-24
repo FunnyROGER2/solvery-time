@@ -2,7 +2,9 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	ComponentRef,
 	HostListener,
+	OnDestroy,
 	OnInit,
 	ViewChild,
 	ViewContainerRef,
@@ -15,7 +17,7 @@ import { PopupService } from 'src/app/services';
 	templateUrl: './popup.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopupComponent implements OnInit {
+export class PopupComponent implements OnInit, OnDestroy {
 	@ViewChild('popupContent', {
 		read: ViewContainerRef,
 	})
@@ -23,6 +25,7 @@ export class PopupComponent implements OnInit {
 
 	title = '';
 	isVisible = false;
+	componentRef!: ComponentRef<any>;
 	private subscriptions = new Subscription();
 
 	constructor(
@@ -38,13 +41,34 @@ export class PopupComponent implements OnInit {
 				},
 			})
 		);
+
+		this.subscriptions.add(
+			this.popupService.eventPopupClose$.subscribe({
+				next: () => {
+					this.close();
+				},
+			})
+		);
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
 	}
 
 	show(title: string, component: any, inputs?: Record<string, any>) {
 		this.isVisible = true;
 		this.title = title;
 		this.cdr.detectChanges();
-		this.popupContent?.createComponent(component, inputs);
+
+		this.componentRef = this.popupContent.createComponent(component);
+
+		if (inputs) {
+			for (const [key, value] of Object.entries(inputs)) {
+				(this.componentRef.instance as any)[key] = value;
+			}
+		}
+
+		this.cdr.detectChanges();
 	}
 
 	close() {

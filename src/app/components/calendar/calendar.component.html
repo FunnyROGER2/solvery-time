@@ -105,7 +105,8 @@
 						[ngClass]="{
 							'calendar__button--weekend': item.weekendDate,
 							'calendar__button--other': item.otherMonthDate,
-							'calendar__button--readonly': urlMode
+							'calendar__button--readonly': urlMode,
+							'calendar__button--now': item.nowDate,
 						}"
 						[isChecked]="item.selectedDate"
 						[attr.disabled]="item.disabledDate"
@@ -134,12 +135,12 @@
 		icon="cross"
 		(click)="clearSlots()"
 	></button>
-	<!-- <button
+	<button
 		app-button
 		[attr.disabled]="!this.slotsSelected.length || null"
 		mode="ghost"
 		(click)="showSlots()"
-		>Cлоты</button> -->
+	>Cлоты</button>
 	<button
 		app-button
 		[attr.disabled]="!this.slotsSelected.length || null"

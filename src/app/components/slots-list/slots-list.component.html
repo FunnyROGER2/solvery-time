@@ -1,1 +1,14 @@
-<div>{{ slots | json }}</div>
+<ul class="slots-list">
+	<li
+		*ngFor="let slot of slots"
+		class="slots-list__item"
+	>
+		<span>{{ slot | date:'yyyy.MM.dd HH:mm' }}</span>
+		<button
+			app-button
+			icon="cross"
+			mode="negative"
+			(click)="slotRemoveHandler(slot)"
+		></button>
+	</li>
+</ul>
