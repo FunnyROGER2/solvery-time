@@ -23,6 +23,7 @@ import {
 	isAfter,
 	isBefore,
 	isMonday,
+	isSameDay,
 	isSameMonth,
 	lastDayOfMonth,
 	previousMonday,
@@ -39,6 +40,7 @@ import {
 	subYears,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { TZDateMini } from '@date-fns/tz';
 import { Subscription } from 'rxjs';
 import { calendarModeNames } from 'src/app/enums';
 import { CalendarDate, SwitcherItem } from 'src/app/interfaces';
@@ -61,6 +63,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	private _slotInterval = 30;
 	private _slotHourStart = 9;
 	private _slotHourEnd = 20;
+	private _tz = '+03:00';
 
 	private subscriptions = new Subscription();
 
@@ -191,11 +194,24 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	}
 
 	get weekDaysArray() {
-		// TODO: добавить отображение даты
-		// TODO: выделять колонку или день "Сегодня"
 		let result: string[] = [];
 		for (let i = 0; i < +this.daysPerWeek; i++) {
 			result.push(this.daysOfWeek[i % 7]);
+		}
+		return result;
+	}
+
+	get weekDaysArrayDate() {
+		let result: { day: string; date: string; now: boolean }[] = [];
+		const weekStart = startOfWeek(this.visibleDate, { weekStartsOn: 1 });
+		for (let i = 0; i < +this.daysPerWeek; i++) {
+			result.push({
+				day: this.daysOfWeek[i % 7],
+				date: `${addDays(weekStart, i).getDate()}.${
+					addDays(weekStart, i).getMonth() + 1
+				}`,
+				now: isSameDay(addDays(weekStart, i), this.nowDate),
+			});
 		}
 		return result;
 	}
@@ -566,9 +582,13 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	}
 
 	copySlots() {
-		// TODO: корректировать часовой пояс
 		const copyText = this.slotsSelected
-			.map((item) => format(item, 'dd/MM/yyyy HH:mm'))
+			.map((item) => {
+				return format(
+					new TZDateMini(item, this._tz),
+					'dd/MM/yyyy HH:mm'
+				);
+			})
 			.join(', ');
 
 		if (this.deviceService.isDesktop()) {

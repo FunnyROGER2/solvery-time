@@ -6,7 +6,7 @@
 	--calendar-nav-shift: 4px;
 	--calendar-button-cl: rgb(var(--c-text-primary));
 	--calendar-button-bg-cl: transparent;
-	--calendar-head-cl: rgb(var(--c-text-primary));
+	--calendar-head-cl: rgb(var(--c-text-primary), .5);
 	--calendar-button-p: 16px 15px;
 	--calendar-min-w: 60px;
 
@@ -67,10 +67,6 @@
 	}
 
 	&__thead {
-		@include media-breakpoint-down(md) {
-			height: 30px;
-		}
-
 		align-items: center;
 		height: 60px;
 	}
@@ -90,6 +86,8 @@
 			@include media-breakpoint-down(md) {
 				--calendar-button-p: 16px 4px;
 				--calendar-min-w: 0;
+
+				grid-template-columns: repeat(7, 1fr);
 			}
 
 			@include media-breakpoint-down(sm) {
@@ -110,6 +108,10 @@
 			.calendar__tbody,
 			.calendar__thead,
 			.calendar__row {
+				@include media-breakpoint-down(md) {
+					grid-column: 1 / 8;
+				}
+
 				display: grid;
 				grid-template-columns: subgrid;
 				grid-column: 1 / 9;
@@ -138,6 +140,13 @@
 	}
 
 	&__head {
+		@include media-breakpoint-down(md) {
+			flex-direction: column;
+		}
+
+		display: flex;
+		gap: 4px;
+		justify-content: center;
 		color: var(--calendar-head-cl);
 
 		&:nth-child(n + 8) {
@@ -148,6 +157,10 @@
 
 		&--weekend {
 			--calendar-head-cl: rgb(var(--c-text-weekend));
+		}
+
+		&--now {
+			--calendar-head-cl: rgb(var(--c-text-primary));
 		}
 	}
 

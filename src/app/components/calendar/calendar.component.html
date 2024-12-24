@@ -61,10 +61,14 @@
 				<th
 					class="calendar__head"
 					[ngClass]="{
-						'calendar__head--weekend': weekendDays.includes(i)
+						'calendar__head--weekend': weekendDays.includes(i),
+						'calendar__head--now': item.now
 					}"
-					*ngFor="let day of weekDaysArray; index as i"
-				>{{ day }}</th>
+					*ngFor="let item of weekDaysArrayDate; index as i"
+				>
+					<span>{{ item.day }}</span>
+					<span>({{ item.date }})</span>
+				</th>
 			</tr>
 		</thead>
 		<tbody class="calendar__tbody">
